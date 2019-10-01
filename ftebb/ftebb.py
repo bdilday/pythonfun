@@ -144,14 +144,6 @@ def _parse_args(args):
     return args
 
 
-def blah():
-    team1 = ProbDist(0.1, 0)
-    team2 = ProbDist(0.2, 1)
-    team4 = ProbDist(0.4, 3)
-
-    res = overall_win_pct(team4, team1)
-    print(res)
-
 
 def main():
     args = _parse_args(sys.argv[1:])

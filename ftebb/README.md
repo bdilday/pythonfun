@@ -4,11 +4,14 @@
 This repo includes code to solve the baseball oriented puzzle from FiveThirtyEight's Riddler for [Sept 27, 2019](https://fivethirtyeight.com/features/which-baseball-team-will-win-the-riddler-fall-classic/)
 
 In this puzzle there are 3 teams.
-Moonwalkers
-Doubloons
-Taters
 
-They also either (walk, hit doubles, hit homeruns)or get a strikeout, respectively. The probabilities for success are (0.4, 0.2, 0.1), respectively, i.e. the average number of bases obtained is 0.4 in each case. The question is, which team is most likely to win the league if the three teams play an equal number of games against each other.
+* Moonwalkers
+
+* Doubloons
+
+* Taters
+
+The three teams always either strikeout or (walk, hit doubles, hit homeruns), respectively. The probabilities for success are (0.4, 0.2, 0.1), respectively, i.e. the average number of bases obtained is 0.4 in each case. The question is, which team is most likely to win the league if the three teams play an equal number of games against each other.
 
 ### ftebb.py (Five Thirty Eight BaseBall)
 
@@ -99,7 +102,7 @@ $ python ./ftebb.py --success-prob 0.1 0.4 --offset 0 3 --baseline-innings 12
 9       21  1.418102e-07  0.499341   0.500642       0.499350
 ```
 
-And if games had a 10-inning baseline, they'd be more likely to win, in games that end after regulation, but more likely to lose overall due to extra inning games.
+And if games had a 10-inning baseline, the Moonwalkers would be more likely to win in games that end after regulation, but more likely to lose overall due to extra inning games.
 
 ```
 $ python ./ftebb.py --success-prob 0.1 0.4 --offset 0 3 --baseline-innings 10
