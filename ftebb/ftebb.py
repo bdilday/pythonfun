@@ -116,8 +116,8 @@ def overall_win_pct(team1, team2, max_value=30, baseline_innings=9):
 
     while tie_prob > epsilon:
         extra_inning_count += 1
-        d1 = team1.multi_prob(extra_inning_count, max_value=30)
-        d2 = team2.multi_prob(extra_inning_count, max_value=30)
+        d1 = team1.multi_prob(1, max_value=30)
+        d2 = team2.multi_prob(1, max_value=30)
         w = ProbDist.compute_win_prob(d1, d2)
         win_pct[1] += w[1] * tie_prob
         win_pct[-1] += w[-1] * tie_prob
@@ -131,18 +131,19 @@ def overall_win_pct(team1, team2, max_value=30, baseline_innings=9):
             }
         )
 
-    return pd.DataFrame(result).assign(relative_prob = lambda x: x.win_prob/(x.win_prob+x.loss_prob))
+    return pd.DataFrame(result).assign(
+        relative_prob=lambda x: x.win_prob / (x.win_prob + x.loss_prob)
+    )
 
 
 def _parse_args(args):
     parser = argparse.ArgumentParser()
     parser.add_argument("--success-prob", required=True, nargs=2, type=float)
-    parser.add_argument("--offset", required=True, nargs=2, type=float)
+    parser.add_argument("--offset", required=True, nargs=2, type=int)
     parser.add_argument("--baseline-innings", default=9, type=int)
     parser.add_argument("--max-value", default=30, type=int)
     args = parser.parse_args(args)
     return args
-
 
 
 def main():
