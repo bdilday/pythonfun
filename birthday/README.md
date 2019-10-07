@@ -3,9 +3,8 @@ This code solves the 538 birthday riddler from [2019-10-04](https://fivethirtyei
 
 The question is:
 
-```
-Given that you need to have 23 people in a group before there's 50-50 chance that at least one pair share a birthday, how many people do you need to have in order to have a 50-50 chance that at least any set of three share a birthday? 
-```
+> Given that you need to have 23 people in a group before there's 50-50 chance that at least one pair share a birthday, how many people do you need to have in order to have a 50-50 chance that at least any set of three share a birthday? 
+
 
 ```
 $ python ./birthday.py --help
