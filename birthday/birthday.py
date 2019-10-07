@@ -97,22 +97,6 @@ class BirthdayCounter:
         )
 
 
-#        pd.DataFrame([bc.analyze_counter(j) for j in list(x)]).rename(columns={0: "total_people", 1: "max_birthday_counter", 2: "multiplicity"})
-
-#  Counter({(3,): 3, (2, 1): 12, (1, 2): 6, (1, 1, 1): 6})
-# 3, 18, 6
-
-# https://stackoverflow.com/questions/46374185/does-python-have-a-function-which-computes-multinomial-coefficients
-def multinomial(params):
-    if len(params) == 1:
-        return 1
-    return binom(sum(params), params[-1]) * multinomial(params[:-1])
-
-
-def multiplicity(arr):
-    numer = gammaln(np.sum(arr) + 1)
-    denom = reduce(float.__add__, map(lambda x: gammaln(x + 1), arr))
-    return int(np.exp(numer - denom))
 
 
 def update_prob(d):
@@ -121,40 +105,6 @@ def update_prob(d):
         pass
 
 
-def next_viable(last_viable):
-    new = set()
-    old = copy.deepcopy(last_viable)
-    for arr in last_viable:
-        for i in range(len(arr)):
-            tmp = list(copy.deepcopy(arr))
-            tmp[i] += 1
-            new.add(tuple(tmp))
-    return new
-
-
-def all_viable(target, num_slots):
-    s = ([0] * num_slots,)
-    ans = {0: copy.deepcopy(s)}
-    for i in range(10):
-        s = next_viable(s)
-        ans[(i + 1)] = copy.deepcopy(s)
-    return ans
-
-
-def main1():
-    target = 3
-    num_slots = 365
-    bc = BirthdayCounter(num_slots)
-    x = set((bc.counter,))
-    for _ in range(300):
-        df = bc.analyze_set(x)
-        print(
-            df.total_people.iloc[0],
-            df.query(f"max_birthday_counter >= {target}").sum().p,
-        )
-        x = bc.get_next_solution_set(x)
-
-    return df
 
 
 def _parse_args(args):
