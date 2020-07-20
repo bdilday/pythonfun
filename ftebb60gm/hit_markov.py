@@ -16,7 +16,9 @@ def _parse_args():
     parser.add_argument("--num-games", type=int, required=True)
     parser.add_argument("--hit-prob", type=float, required=False, default=0.35)
     parser.add_argument("--num-abs", type=int, default=4)
+    parser.add_argument("--ba-target", type=float, default=0.35)
     parser.add_argument("--streak-target", "-t", type=int, required=False, default=56)
+    parser.add_argument("--game-checks", nargs="+", type=int, required=False)
     parser.add_argument("--output-path", "-o", required=False)
     return parser.parse_args(sys.argv[1:])
 
@@ -117,11 +119,31 @@ def summary(result_df, columns):
         .reset_index()
     )
 
-    print(summary_df)
     return summary_df
 
+def overall_summary(result_df, games):
+    summary_types = (
+        ["did_reach_ba_target"],
+        ["did_reach_streak_target"],
+        ["did_reach_ba_target", "did_reach_streak_target"]
+    )
+    descriptors = (
+        "probability to hit 0.400",
+        "probability to achieve hit streak",
+        "probability to hit 0.400 AND achieve hit streak"
+    )
 
-DEFAULTS = {"hit_prob": 0.35, "num_abs": 4, "num_games": 60, "streak_target": 56}
+    pd.set_option('display.float_format', '{:,.4e}'.format)
+    for descriptor, summary_type in zip(descriptors, summary_types):
+        summary_df = summary(result_df, summary_type)
+        print("-"*60)
+        print("-- ", descriptor)
+        print("-" * 60)
+        for num_games in games:
+            query = " and ".join(summary_type)
+            prob_df = summary_df.query(f"games == {num_games}")# and {query}")
+            print(prob_df)
+
 
 def main():
     pd.set_option("display.max_columns", 999)
@@ -134,15 +156,14 @@ def main():
     num_games = args.num_games
     output_path = args.output_path
     streak_target = args.streak_target
-    ba_target = 0.4
+    ba_target = args.ba_target
+    game_checks = args.game_checks or [60, 162]
 
     result_df = longest_streaks(hit_prob, num_abs, num_games, streak_target)
     result_df = result_df.assign(
         did_reach_ba_target=lambda row: (row.ba >= ba_target).astype(int)
     )
-    summary(result_df, ["did_reach_ba_target"])
-    summary(result_df, ["did_reach_streak_target"])
-    summary(result_df, ["did_reach_ba_target", "did_reach_streak_target"])
+    overall_summary(result_df, game_checks)
 
     if output_path:
         result_df.to_csv(output_path, index=False)
