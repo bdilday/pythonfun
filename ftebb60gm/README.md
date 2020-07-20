@@ -10,7 +10,7 @@ The questions are, given a true hit-per-AB probability of 0.35,
  what are the odds of 
  
  * hitting 0.400
- * hitting in at least 56 straights games
+ * hitting in at least 56 straight games
  * hitting both 0.400 and in at least 56 straight games
  
  for seasons of length 60 and 162.
@@ -29,7 +29,7 @@ The questions are, given a true hit-per-AB probability of 0.35,
  ### Solution
  
  ```bash
-$ python ./ftebb60gm/hit_markov.py --num-games 162 --hit-prob 0.35 --num-abs 4 --streak-target 56 --ba-target 0.35 --game-checks 60 162
+$ python ./ftebb60gm/hit_markov.py --num-games 162 --hit-prob 0.35 --num-abs 4 --streak-target 56 --ba-target 0.4 --game-checks 60 162
 
 ------------------------------------------------------------
 --  probability to hit 0.400
