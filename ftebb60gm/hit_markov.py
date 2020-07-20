@@ -35,12 +35,6 @@ class HitState:
         yield self.did_reach_streak_target
 
 
-@attr.s
-class MarkovHitState:
-    state = attr.ib(type=HitState, default=HitState())
-    state_prob = attr.ib(type=float, default=1)
-
-
 @attr.s(frozen=True, hash=True)
 class HitEvent:
     num_hits = attr.ib(type=int)
@@ -98,7 +92,7 @@ def longest_streaks(hit_prob, num_abs, num_games, streak_target):
     states = [state_vector]
 
     for idx in range(num_games):
-        logging.info("game %d of %d", idx+1, num_games)
+        logging.info("game %d of %d", idx + 1, num_games)
         state_vector = states[-1]
         new_state_vector = defaultdict(float)
         for state, state_prob in state_vector.items():
@@ -113,35 +107,31 @@ def longest_streaks(hit_prob, num_abs, num_games, streak_target):
 
 
 def summary(result_df, columns):
-    summary_df = (
-        result_df.groupby(["games"] + columns)
-        .prob.sum()
-        .reset_index()
-    )
+    summary_df = result_df.groupby(["games"] + columns).prob.sum().reset_index()
 
     return summary_df
+
 
 def overall_summary(result_df, games):
     summary_types = (
         ["did_reach_ba_target"],
         ["did_reach_streak_target"],
-        ["did_reach_ba_target", "did_reach_streak_target"]
+        ["did_reach_ba_target", "did_reach_streak_target"],
     )
     descriptors = (
         "probability to hit 0.400",
         "probability to achieve hit streak",
-        "probability to hit 0.400 AND achieve hit streak"
+        "probability to hit 0.400 AND achieve hit streak",
     )
 
-    pd.set_option('display.float_format', '{:,.4e}'.format)
+    pd.set_option("display.float_format", "{:,.4e}".format)
     for descriptor, summary_type in zip(descriptors, summary_types):
         summary_df = summary(result_df, summary_type)
-        print("-"*60)
+        print("-" * 60)
         print("-- ", descriptor)
         print("-" * 60)
         for num_games in games:
-            query = " and ".join(summary_type)
-            prob_df = summary_df.query(f"games == {num_games}")# and {query}")
+            prob_df = summary_df.query(f"games == {num_games}")
             print(prob_df)
 
 
