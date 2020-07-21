@@ -81,7 +81,6 @@ def states_to_df(states):
     results = []
     for idx, state in enumerate(states):
         results += state_vector_to_dicts(state, idx)
-
     return pd.DataFrame(results)
 
 
@@ -108,7 +107,6 @@ def longest_streaks(hit_prob, num_abs, num_games, streak_target):
 
 def summary(result_df, columns):
     summary_df = result_df.groupby(["games"] + columns).prob.sum().reset_index()
-
     return summary_df
 
 
@@ -141,22 +139,16 @@ def main():
 
     args = _parse_args()
 
-    hit_prob = args.hit_prob
-    num_abs = args.num_abs
-    num_games = args.num_games
-    output_path = args.output_path
-    streak_target = args.streak_target
-    ba_target = args.ba_target
     game_checks = args.game_checks or [60, 162]
 
-    result_df = longest_streaks(hit_prob, num_abs, num_games, streak_target)
+    result_df = longest_streaks(args.hit_prob, args.num_abs, args.num_games, args.streak_target)
     result_df = result_df.assign(
-        did_reach_ba_target=lambda row: (row.ba >= ba_target).astype(int)
+        did_reach_ba_target=lambda row: (row.ba >= args.ba_target).astype(int)
     )
     overall_summary(result_df, game_checks)
 
-    if output_path:
-        result_df.to_csv(output_path, index=False)
+    if args.output_path:
+        result_df.to_csv(args.output_path, index=False)
 
 
 if __name__ == "__main__":
